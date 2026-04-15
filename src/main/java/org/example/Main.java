@@ -47,7 +47,7 @@ public class Main {
                         System.out.println("Indique el id del ciclista a modificar.");
                         idCiclista = sc.nextInt();
                         sc.nextLine();
-                        boolean idCicExixste = Comprobador.comprobarEquipo(idCiclista,conn);
+                        boolean idCicExixste = Comprobador.comprobarCiclista(idCiclista,conn);
                         if (idCicExixste) {
                             System.out.println("¿Que campo desea actualizar?");
                             System.out.println("1. ID del equipo");
