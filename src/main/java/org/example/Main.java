@@ -14,6 +14,9 @@ public class Main {
         int opcion = -1;
         int opcion2 = -1;
 
+        /**
+         * Conexión mediante Maven
+         */
         try (Connection conn = DriverManager.getConnection(
                 DBConfig.getUrl(),
                 DBConfig.getUser(),
@@ -35,52 +38,72 @@ public class Main {
                     sc.nextLine();
                 }
 
+
+                /**
+                 * En todos los que piden un id, si se teclea una letra lanza una excepción
+                 * y sale al menú principal
+                 */
                 switch (opcion) {
                     case 1:
-                        System.out.println("Indique el id del equipo del nuevo ciclista.");
-                        idEquipo = sc.nextInt();
-                        sc.nextLine();
-                        Insertar.inseertarCiclista(conn,sc,idEquipo);
+                        try {
+                            System.out.println("Indique el id del equipo del nuevo ciclista.");
+                            idEquipo = sc.nextInt();
+                            sc.nextLine();
+                            Insertar.inseertarCiclista(conn,sc,idEquipo);
+                        }catch (InputMismatchException e){
+                            System.out.println("El id del equipo tiene que ser numérico");
+                            sc.nextLine();
+                        }
                         break;
 
                     case 2:
-                        System.out.println("Indique el id del ciclista a modificar.");
-                        idCiclista = sc.nextInt();
-                        sc.nextLine();
-                        boolean idCicExixste = Comprobador.comprobarCiclista(idCiclista,conn);
-                        if (idCicExixste) {
-                            System.out.println("¿Que campo desea actualizar?");
-                            System.out.println("1. ID del equipo");
-                            System.out.println("2. Edad");
-                            try {
-                                opcion2 = sc.nextInt();
-                                sc.nextLine();
-                            }catch (InputMismatchException e){
-                                System.out.println("La opción ha de ser un número.");
-                                sc.nextLine();
-                            }
+                        try {
+                            System.out.println("Indique el id del ciclista a modificar.");
+                            idCiclista = sc.nextInt();
+                            sc.nextLine();
+                            boolean idCicExixste = Comprobador.comprobarCiclista(idCiclista,conn);
+                            if (idCicExixste) {
+                                System.out.println("¿Que campo desea actualizar?");
+                                System.out.println("1. ID del equipo");
+                                System.out.println("2. Edad");
+                                try {
+                                    opcion2 = sc.nextInt();
+                                    sc.nextLine();
+                                }catch (InputMismatchException e){
+                                    System.out.println("La opción ha de ser un número.");
+                                    sc.nextLine();
+                                }
 
-                            switch (opcion2) {
-                                case 1:
-                                    Actualizar.actualizarEquipoCiclista(conn,sc, idCiclista);
-                                    break;
-                                case 2:
-                                    Actualizar.actualizarEdadCiclista(conn,sc, idCiclista);
-                                    break;
-                                default:
-                                    System.out.println("Opción no válida");
-                                    break;
+                                switch (opcion2) {
+                                    case 1:
+                                        Actualizar.actualizarEquipoCiclista(conn,sc, idCiclista);
+                                        break;
+                                    case 2:
+                                        Actualizar.actualizarEdadCiclista(conn,sc, idCiclista);
+                                        break;
+                                    default:
+                                        System.out.println("Opción no válida");
+                                        break;
+                                }
+                            } else {
+                                System.out.println("El id del ciclista no existe");
                             }
-                        } else {
-                            System.out.println("El id del ciclista no existe");
+                        }catch (InputMismatchException e){
+                            System.out.println("El id del ciclista tiene que ser numérico");
+                            sc.nextLine();
                         }
                         break;
 
                     case 3:
-                        System.out.println("Indique el id del ciclista");
-                        idCiclista = sc.nextInt();
-                        sc.nextLine();
-                        Eliminar.eliminarCiclista(conn, idCiclista);
+                        try {
+                            System.out.println("Indique el id del ciclista");
+                            idCiclista = sc.nextInt();
+                            sc.nextLine();
+                            Eliminar.eliminarCiclista(conn, idCiclista);
+                        }catch (InputMismatchException e){
+                            System.out.println("El id del ciclista tiene que ser numérico");
+                            sc.nextLine();
+                        }
                         break;
 
                     case 4:
@@ -100,6 +123,9 @@ public class Main {
                         System.out.println();
                         break;
                 }
+            /**
+             * Mientras opción sea diferente a 0 se repite
+             */
             }while (opcion != 0);
         } catch (SQLException e1) {
             System.out.println("Error al conectar: " + e1.getMessage());
